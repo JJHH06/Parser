@@ -90,14 +90,21 @@ def file_simulation(extended_automata, test_string):
 # params:
 #   - item: a list of the form [non_terminal, [element0, element1...], index]
 #   - productions: list of productions in item format but index is always -1
-def grammar_closure(item, productions):
-    items = [item]
+def grammar_closure(item_list: list, productions):
+    items = item_list.copy()
     i = 0
     while i < len(items):
-        if items[i][2] < len(items[i][1]) and item[1][item[2]][0] == 'NON_TERMINAL':
+        if items[i][2] < len(items[i][1]) and items[i][1][items[i][2]][0] == 'NON_TERMINAL':
             items = items + [[j[0],j[1],0] for j in productions if j[0] == items[i][1][items[i][2]] and [j[0],j[1],0] not in items]
         i += 1
     return items
+
+# goto without the closure
+def grammar_goto( items, symbol ):
+    movable_items = [n for n in items if n[2] < len(n[1])]
+    goto_items = [i for i in movable_items if i[1][i[2]] == symbol]
+    moved_items = [[j[0], j[1], j[2]+1] for j in goto_items]
+    return moved_items
 
 
 def main():
@@ -189,18 +196,23 @@ def main():
 
     init_trans = productions[0].copy()
     init_trans[2] = 0
-    init_closure = grammar_closure(init_trans, productions)
+    init_closure = grammar_closure([init_trans], productions)
 
     print("\nINITIAL CLOSURE xd:")
     for production in init_closure:
         print(production[0][1], '->', [n[1] for n in production[1]], production[2])
 
+    E_goto = grammar_goto(init_closure, ('NON_TERMINAL', 'expression'))
+    print("\nINITIAL GOTO:")
+    for production in E_goto:
+        print(production[0][1], '->', [n[1] for n in production[1]], production[2])
 
 
-
-
-
-
+def grammar_goto( items, symbol ):
+    movable_items = [n for n in items if n[2] < len(n[1])]
+    goto_items = [i for i in movable_items if i[1][i[2]] == symbol]
+    moved_items = [[j[0], j[1], j[2]+1] for j in goto_items]
+    return moved_items
 
 
 
