@@ -4,16 +4,35 @@ import sys
 from ExtendedAutomata import *
 
 
-extended_automata = ExtendedAutomata([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], {'p', '%', 'v', ';', 'e', 'j', 'm', '\n', 'k', 'a', 'K', 'y', 'C', 'x', 'J', '\t', 'h', 's', 'D', 'M', 'Z', 'O', 'f', 'q', 'w', 'P', 'R', 'W', 'Y', 'S', 'r', 'g', 'd', 'V', '|', 'u', 'c', 'G', 'n', 'E', 'b', 'i', 'X', 'I', ' ', 'H', 't', 'B', 'F', 'L', 'U', 'N', 'l', 'o', 'z', ':', 'T', 'A', 'Q'}, [((0, 'p'), 1), ((0, '%'), 2), ((0, 'v'), 1), ((0, ';'), 3), ((0, 'e'), 1), ((0, 'j'), 1), ((0, '\n'), 4), ((0, 'k'), 1), ((0, 'a'), 1), ((0, 'K'), 5), ((0, 'y'), 1), ((0, 'C'), 5), ((0, 'x'), 1), ((0, 'h'), 1), ((0, '\t'), 4), ((0, 's'), 1), ((0, 'D'), 5), ((0, 'M'), 5), ((0, 'Z'), 5), ((0, 'O'), 5), ((0, 'f'), 1), ((0, 'q'), 1), ((0, 'w'), 1), ((0, 'P'), 5), ((0, 'R'), 5), ((0, 'W'), 5), ((0, 'Y'), 5), ((0, 'S'), 5), ((0, 'T'), 5), ((0, 'r'), 1), ((0, 'g'), 1), ((0, 'd'), 1), ((0, 'V'), 5), ((0, 'u'), 1), ((0, 'c'), 1), ((0, 'G'), 5), ((0, 'n'), 1), ((0, 'E'), 5), ((0, 'b'), 1), ((0, 'Q'), 5), ((0, 'i'), 1), ((0, 'X'), 5), ((0, 'I'), 5), ((0, ' '), 4), ((0, 'H'), 5), ((0, '|'), 6), ((0, 't'), 1), ((0, 'B'), 5), ((0, 'F'), 5), ((0, 'L'), 5), ((0, 'U'), 5), ((0, 'N'), 5), ((0, 'l'), 1), ((0, 'o'), 1), ((0, 'z'), 1), ((0, ':'), 7), ((0, 'm'), 1), ((0, 'A'), 5), ((0, 'J'), 5), ((1, 'p'), 1), ((1, 'v'), 1), ((1, 'e'), 1), ((1, 'j'), 1), ((1, 'k'), 1), ((1, 'a'), 1), ((1, 'y'), 1), ((1, 'x'), 1), ((1, 'h'), 1), ((1, 's'), 1), ((1, 'f'), 1), ((1, 'q'), 1), ((1, 'w'), 1), ((1, 'r'), 1), ((1, 'g'), 1), ((1, 'd'), 1), ((1, 'u'), 1), ((1, 'c'), 1), ((1, 'n'), 1), ((1, 'b'), 1), ((1, 'i'), 1), ((1, 't'), 1), ((1, 'l'), 1), ((1, 'o'), 1), ((1, 'z'), 1), ((1, 'm'), 1), ((2, 't'), 8), ((4, '\n'), 4), ((4, '\t'), 4), ((4, ' '), 4), ((5, 'K'), 5), ((5, 'C'), 5), ((5, 'D'), 5), ((5, 'M'), 5), ((5, 'Z'), 5), ((5, 'O'), 5), ((5, 'P'), 5), ((5, 'R'), 5), ((5, 'W'), 5), ((5, 'Y'), 5), ((5, 'S'), 5), ((5, 'T'), 5), ((5, 'V'), 5), ((5, 'G'), 5), ((5, 'E'), 5), ((5, 'Q'), 5), ((5, 'X'), 5), ((5, 'I'), 5), ((5, 'H'), 5), ((5, 'B'), 5), ((5, 'F'), 5), ((5, 'L'), 5), ((5, 'U'), 5), ((5, 'N'), 5), ((5, 'A'), 5), ((5, 'J'), 5), ((8, 'o'), 9), ((9, 'k'), 10), ((10, 'e'), 11), ((11, 'n'), 12)], 0, [1, 3, 4, 5, 6, 7, 12], [1, 6, 0, 2, 4, 5, 3])
+
+def clean_comments(raw_input):
+    clean_string = ''
+    can_append = True
+    i = 0
+    while i < len(raw_input):
+        if raw_input[i] == '/':
+            if (i+1 < len(raw_input) and raw_input[i+1] == '*'):
+                can_append = False
+                i += 2  # skip over the comment start
+                continue
+        elif raw_input[i] == '*':
+            if (i+1 < len(raw_input) and raw_input[i+1] == '/'):
+                can_append = True
+                i += 2  # skip over the comment end
+                continue
+        if can_append:
+            clean_string += raw_input[i]
+            i += 1
+        else:
+            i += 1
+    return clean_string
+
 
 
 def read_file(file_path):
     with open(file_path, 'r') as file:
         return file.read()
     
-ruta_archivo = sys.argv[1]
-
-file_content = read_file(ruta_archivo)
 
 
 def match_automata_returns(recognized_type, i):
@@ -23,13 +42,13 @@ def match_automata_returns(recognized_type, i):
     elif recognized_type == 0:
         pass
     elif recognized_type == 1:
-         return 'Non Terminal' 
+         return 'NON_TERMINAL' 
     elif recognized_type == 2:
          return 'TOKEN' 
     elif recognized_type == 3:
          return 'TOKEN_DECLARATION' 
     elif recognized_type == 4:
-         return 'TOKEN_DECLARATION' 
+         return 'OR' 
     elif recognized_type == 5:
          return 'PROD_ARROW' 
     elif recognized_type == 6:
@@ -38,6 +57,7 @@ def match_automata_returns(recognized_type, i):
 
 
 def file_simulation(extended_automata, test_string):
+    recognized_tokens = []
     test_string = test_string + ''
     current_sim_status = 0
     first_recognized_pos = 0
@@ -54,7 +74,7 @@ def file_simulation(extended_automata, test_string):
         elif current_sim_status == -1:
             token = match_automata_returns(reconized_type, i)
             if token is not None:
-                print(token, ':', test_string[first_recognized_pos:last_accepted_pos+1])
+                recognized_tokens.append((token, test_string[first_recognized_pos:last_accepted_pos+1]))
             if test_string[i] == '':
                 break
             extended_automata.reset_simulation()
@@ -63,10 +83,78 @@ def file_simulation(extended_automata, test_string):
             reconized_type = None
             continue
         i += 1
+    return recognized_tokens
 
 
+
+
+def main():
+    extended_automata = ExtendedAutomata([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], {' ', 'p', 'c', 'x', 'H', 'a', 'e', 'y', 'r', ';', '\t', 'C', 'u', 'Z', 'E', 'O', 'w', 'j', 'L', '\n', 'n', 'm', 'g', 'R', 'N', 'S', 'A', 'o', 'G', 'M', 'd', 'B', 'f', 'J', 'K', 'k', 'P', 'X', 'i', 'v', 's', 'U', 'b', 'Y', 'F', 'T', '%', ':', 'l', 'h', 'q', 'W', 'I', 'V', 't', 'D', '|', 'z', 'Q'}, [((0, ' '), 1), ((0, 'p'), 2), ((0, 'c'), 2), ((0, 'x'), 2), ((0, 'H'), 3), ((0, 'a'), 2), ((0, 'e'), 2), ((0, 'y'), 2), ((0, 'r'), 2), ((0, ';'), 4), ((0, '\t'), 1), ((0, 'C'), 3), ((0, 'u'), 2), ((0, 'Z'), 3), ((0, 'E'), 3), ((0, 'O'), 3), ((0, 'w'), 2), ((0, 'j'), 2), ((0, 'L'), 3), ((0, '\n'), 1), ((0, 'n'), 2), ((0, 'm'), 2), ((0, 'g'), 2), ((0, 'R'), 3), ((0, 'N'), 3), ((0, 'S'), 3), ((0, 'A'), 3), ((0, 'o'), 2), ((0, 'G'), 3), ((0, 'M'), 3), ((0, 'd'), 2), ((0, 'B'), 3), ((0, 'f'), 2), ((0, 'J'), 3), ((0, 'K'), 3), ((0, 'k'), 2), ((0, 'P'), 3), ((0, 'X'), 3), ((0, 'i'), 2), ((0, 'v'), 2), ((0, 's'), 2), ((0, 'U'), 3), ((0, '|'), 5), ((0, 'b'), 2), ((0, 'Y'), 3), ((0, 'F'), 3), ((0, 'T'), 3), ((0, '%'), 6), ((0, ':'), 7), ((0, 'l'), 2), ((0, 'h'), 2), ((0, 'q'), 2), ((0, 'W'), 3), ((0, 'I'), 3), ((0, 't'), 2), ((0, 'V'), 3), ((0, 'D'), 3), ((0, 'z'), 2), ((0, 'Q'), 3), ((1, ' '), 1), ((1, '\t'), 1), ((1, '\n'), 1), ((2, 'p'), 2), ((2, 'c'), 2), ((2, 'x'), 2), ((2, 'a'), 2), ((2, 'e'), 2), ((2, 'y'), 2), ((2, 'r'), 2), ((2, 'u'), 2), ((2, 'w'), 2), ((2, 'j'), 2), ((2, 'n'), 2), ((2, 'm'), 2), ((2, 'g'), 2), ((2, 'o'), 2), ((2, 'd'), 2), ((2, 'f'), 2), ((2, 'k'), 2), ((2, 'i'), 2), ((2, 'v'), 2), ((2, 's'), 2), ((2, 'b'), 2), ((2, 'l'), 2), ((2, 'h'), 2), ((2, 'q'), 2), ((2, 't'), 2), ((2, 'z'), 2), ((3, 'H'), 3), ((3, 'C'), 3), ((3, 'Z'), 3), ((3, 'E'), 3), ((3, 'O'), 3), ((3, 'L'), 3), ((3, 'R'), 3), ((3, 'N'), 3), ((3, 'S'), 3), ((3, 'A'), 3), ((3, 'G'), 3), ((3, 'M'), 3), ((3, 'B'), 3), ((3, 'J'), 3), ((3, 'K'), 3), ((3, 'P'), 3), ((3, 'X'), 3), ((3, 'U'), 3), ((3, 'Y'), 3), ((3, 'F'), 3), ((3, 'T'), 3), ((3, 'W'), 3), ((3, 'I'), 3), ((3, 'V'), 3), ((3, 'D'), 3), ((3, 'Q'), 3), ((6, 't'), 8), ((8, 'o'), 9), ((9, 'k'), 10), ((10, 'e'), 11), ((11, 'n'), 12)], 0, [1, 2, 3, 4, 5, 7, 12], [0, 1, 2, 6, 4, 5, 3])
+    ruta_archivo = sys.argv[1]
+    file_content = read_file(ruta_archivo)
+    file_tokens = file_simulation(extended_automata, clean_comments(file_content))
+    productions = []
+
+    # NON TERMINAL, [ELEMENT1, ELEMENT2, ...],-1
+    current_production = [None, [], -1]
+
+    #ELEMENT has the following structure (TYPE, VALUE)
+
+    #
+    #TODO: comment debug
+    print(file_tokens)
+
+    is_declaring_tokens = False
+    is_delcaring_productions = True
+    terminals = set()
+    non_terminals = set()
+    for token in file_tokens:
+
+        if token[0] == 'TOKEN_DECLARATION':
+            is_declaring_tokens = True
+        elif token[0] == 'TOKEN':
+            if is_declaring_tokens:
+                terminals.add(token)
+            else:
+                # IF FOUND IN PRODUCTION
+                current_production[1].append(token)
+        elif token[0] == 'NON_TERMINAL':
+            if is_delcaring_productions:
+                current_production[0] = token
+                non_terminals.add(token)
+            else:
+                # IF inside production
+                current_production[1].append(token)
+                non_terminals.add(token)
+
+        elif token[0] == 'PROD_ARROW':
+            is_declaring_tokens = False
+            is_delcaring_productions = False #este tiene que cambiar con el EOP
+        elif token[0] == 'OR':
+            # IF inside production
+            productions.append(current_production)
+            current_production = [current_production[0], [], -1]
+        elif token[0] == 'EOP':
+            # IF inside production
+            productions.append(current_production)
+            current_production = [None, [], -1]
+            is_delcaring_productions = True
     
-file_simulation(extended_automata, file_content)
-    
+    print("\nPRODUCTIONS:")
+    for production in productions:
+        print(production[0][1], '->', [n[1] for n in production[1]])
 
-print('Finished file')
+    print("\nTERMINALS:")
+    print(terminals)
+
+    print("\nNON TERMINALS:")
+    print(non_terminals)
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    main()
