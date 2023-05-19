@@ -1,0 +1,202 @@
+
+STATE: 0
+p_PRIME -> ['p'] 0
+p -> ['t'] 0
+t -> ['m', 'q'] 0
+t -> ['m'] 0
+m -> ['a'] 0
+a -> ['ID', 'ASSIGNOP', 'e'] 0
+
+STATE: 1
+p -> ['t'] 1
+
+STATE: 2
+t -> ['m', 'q'] 1
+t -> ['m'] 1
+q -> ['SEMICOLON', 'm', 'q'] 0
+q -> ['SEMICOLON', 'm'] 0
+
+STATE: 3
+m -> ['a'] 1
+
+STATE: 4
+p_PRIME -> ['p'] 1
+
+STATE: 5
+a -> ['ID', 'ASSIGNOP', 'e'] 1
+
+STATE: 6
+t -> ['m', 'q'] 2
+
+STATE: 7
+q -> ['SEMICOLON', 'm', 'q'] 1
+q -> ['SEMICOLON', 'm'] 1
+m -> ['a'] 0
+a -> ['ID', 'ASSIGNOP', 'e'] 0
+
+STATE: 8
+a -> ['ID', 'ASSIGNOP', 'e'] 2
+e -> ['x', 'z'] 0
+e -> ['x'] 0
+x -> ['r', 'w'] 0
+x -> ['r'] 0
+r -> ['f', 'v'] 0
+r -> ['f'] 0
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 9
+q -> ['SEMICOLON', 'm', 'q'] 2
+q -> ['SEMICOLON', 'm'] 2
+q -> ['SEMICOLON', 'm', 'q'] 0
+q -> ['SEMICOLON', 'm'] 0
+
+STATE: 10
+e -> ['x', 'z'] 1
+e -> ['x'] 1
+z -> ['LT', 'x'] 0
+z -> ['EQ', 'x'] 0
+
+STATE: 11
+r -> ['f', 'v'] 1
+r -> ['f'] 1
+v -> ['j', 'v'] 0
+v -> ['j'] 0
+j -> ['TIMES', 'f'] 0
+j -> ['DIV', 'f'] 0
+
+STATE: 12
+x -> ['r', 'w'] 1
+x -> ['r'] 1
+w -> ['y', 'w'] 0
+w -> ['y'] 0
+y -> ['PLUS', 'r'] 0
+y -> ['MINUS', 'r'] 0
+
+STATE: 13
+a -> ['ID', 'ASSIGNOP', 'e'] 3
+
+STATE: 14
+f -> ['LPAREN', 'e', 'RPAREN'] 1
+e -> ['x', 'z'] 0
+e -> ['x'] 0
+x -> ['r', 'w'] 0
+x -> ['r'] 0
+r -> ['f', 'v'] 0
+r -> ['f'] 0
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 15
+f -> ['NUMBER'] 1
+
+STATE: 16
+f -> ['ID'] 1
+
+STATE: 17
+q -> ['SEMICOLON', 'm', 'q'] 3
+
+STATE: 18
+e -> ['x', 'z'] 2
+
+STATE: 19
+z -> ['LT', 'x'] 1
+x -> ['r', 'w'] 0
+x -> ['r'] 0
+r -> ['f', 'v'] 0
+r -> ['f'] 0
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 20
+z -> ['EQ', 'x'] 1
+x -> ['r', 'w'] 0
+x -> ['r'] 0
+r -> ['f', 'v'] 0
+r -> ['f'] 0
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 21
+v -> ['j', 'v'] 1
+v -> ['j'] 1
+v -> ['j', 'v'] 0
+v -> ['j'] 0
+j -> ['TIMES', 'f'] 0
+j -> ['DIV', 'f'] 0
+
+STATE: 22
+r -> ['f', 'v'] 2
+
+STATE: 23
+j -> ['TIMES', 'f'] 1
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 24
+j -> ['DIV', 'f'] 1
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 25
+x -> ['r', 'w'] 2
+
+STATE: 26
+w -> ['y', 'w'] 1
+w -> ['y'] 1
+w -> ['y', 'w'] 0
+w -> ['y'] 0
+y -> ['PLUS', 'r'] 0
+y -> ['MINUS', 'r'] 0
+
+STATE: 27
+y -> ['PLUS', 'r'] 1
+r -> ['f', 'v'] 0
+r -> ['f'] 0
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 28
+y -> ['MINUS', 'r'] 1
+r -> ['f', 'v'] 0
+r -> ['f'] 0
+f -> ['LPAREN', 'e', 'RPAREN'] 0
+f -> ['NUMBER'] 0
+f -> ['ID'] 0
+
+STATE: 29
+f -> ['LPAREN', 'e', 'RPAREN'] 2
+
+STATE: 30
+z -> ['LT', 'x'] 2
+
+STATE: 31
+z -> ['EQ', 'x'] 2
+
+STATE: 32
+v -> ['j', 'v'] 2
+
+STATE: 33
+j -> ['TIMES', 'f'] 2
+
+STATE: 34
+j -> ['DIV', 'f'] 2
+
+STATE: 35
+w -> ['y', 'w'] 2
+
+STATE: 36
+y -> ['PLUS', 'r'] 2
+
+STATE: 37
+y -> ['MINUS', 'r'] 2
+
+STATE: 38
+f -> ['LPAREN', 'e', 'RPAREN'] 3

@@ -1,0 +1,53 @@
+
+STATE: 0
+expression_PRIME -> ['expression'] 0
+expression -> ['term', 'PLUS', 'expression'] 0
+expression -> ['term'] 0
+term -> ['NUMBER', 'TIMES', 'term'] 0
+term -> ['NUMBER'] 0
+term -> ['LPAREN', 'expression', 'RPAREN'] 0
+
+STATE: 1
+expression_PRIME -> ['expression'] 1
+
+STATE: 2
+expression -> ['term', 'PLUS', 'expression'] 1
+expression -> ['term'] 1
+
+STATE: 3
+term -> ['NUMBER', 'TIMES', 'term'] 1
+term -> ['NUMBER'] 1
+
+STATE: 4
+term -> ['LPAREN', 'expression', 'RPAREN'] 1
+expression -> ['term', 'PLUS', 'expression'] 0
+expression -> ['term'] 0
+term -> ['NUMBER', 'TIMES', 'term'] 0
+term -> ['NUMBER'] 0
+term -> ['LPAREN', 'expression', 'RPAREN'] 0
+
+STATE: 5
+expression -> ['term', 'PLUS', 'expression'] 2
+expression -> ['term', 'PLUS', 'expression'] 0
+expression -> ['term'] 0
+term -> ['NUMBER', 'TIMES', 'term'] 0
+term -> ['NUMBER'] 0
+term -> ['LPAREN', 'expression', 'RPAREN'] 0
+
+STATE: 6
+term -> ['NUMBER', 'TIMES', 'term'] 2
+term -> ['NUMBER', 'TIMES', 'term'] 0
+term -> ['NUMBER'] 0
+term -> ['LPAREN', 'expression', 'RPAREN'] 0
+
+STATE: 7
+term -> ['LPAREN', 'expression', 'RPAREN'] 2
+
+STATE: 8
+expression -> ['term', 'PLUS', 'expression'] 3
+
+STATE: 9
+term -> ['NUMBER', 'TIMES', 'term'] 3
+
+STATE: 10
+term -> ['LPAREN', 'expression', 'RPAREN'] 3
