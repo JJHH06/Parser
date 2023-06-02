@@ -20,6 +20,9 @@ STATE: 3
 term -> ['factor'] 1
 
 STATE: 4
+factor -> ['ID'] 1
+
+STATE: 5
 factor -> ['LPAREN', 'expression', 'RPAREN'] 1
 expression -> ['expression', 'PLUS', 'term'] 0
 expression -> ['term'] 0
@@ -27,9 +30,6 @@ term -> ['term', 'TIMES', 'factor'] 0
 term -> ['factor'] 0
 factor -> ['LPAREN', 'expression', 'RPAREN'] 0
 factor -> ['ID'] 0
-
-STATE: 5
-factor -> ['ID'] 1
 
 STATE: 6
 expression -> ['expression', 'PLUS', 'term'] 2

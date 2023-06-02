@@ -25,8 +25,8 @@ def main():
 
     is_declaring_tokens = False
     is_delcaring_productions = True
-    terminals = set()
-    non_terminals = set()
+    terminals = []
+    non_terminals = []
     
     for token in file_tokens:
 
@@ -34,18 +34,21 @@ def main():
             is_declaring_tokens = True
         elif token[0] == 'TOKEN':
             if is_declaring_tokens:
-                terminals.add(token)
+                if token not in terminals:
+                    terminals.append(token)
             else:
                 # IF FOUND IN PRODUCTION
                 current_production[1].append(token)
         elif token[0] == 'NON_TERMINAL':
             if is_delcaring_productions:
                 current_production[0] = token
-                non_terminals.add(token)
+                if token not in non_terminals:
+                    non_terminals.append(token)
             else:
                 # IF inside production
                 current_production[1].append(token)
-                non_terminals.add(token)
+                if token not in non_terminals:
+                    non_terminals.append(token)
 
         elif token[0] == 'PROD_ARROW':
             is_declaring_tokens = False
@@ -82,7 +85,8 @@ def main():
     print("\nNON TERMINALS:")
     print(non_terminals)
 
-    alphabet = list(non_terminals) + list(terminals)
+    alphabet = non_terminals + terminals
+    alphabet = copy.deepcopy(alphabet)
 
 
     #CONVENCION
@@ -102,10 +106,10 @@ def main():
     equival_states, slr_automata = grammar_subset_construction(productions, alphabet)
 
     # for every state in equivalent states print its productions 
-    for state in range(len(equival_states)):
-        print("\nSTATE: ", state)
-        for production in equival_states[state]:
-            print(production[0][1], '->', [n[1] for n in production[1]], production[2])
+    # for state in range(len(equival_states)):
+    #     print("\nSTATE: ", state)
+    #     for production in equival_states[state]:
+    #         print(production[0][1], '->', [n[1] for n in production[1]], production[2])
 
     file_name = os.path.basename(ruta_archivo)
     with open("./lab_outputs/"+file_name+".legend.txt", 'w') as file:
@@ -125,6 +129,33 @@ def main():
 
     # no terminales son: NON_TERMINAL
     # terminales son: TOKEN
+
+    # build a dictionary of the productions
+    # equival_states
+
+    STATES_LEN = len(equival_states)
+    non_terminals_tokens = [n[1] for n in non_terminals]#list(non_terminals) #esto es porque hoy si necesito que tengan el mismo orden xd
+
+    
+    goto_table = [{i:None for i in non_terminals_tokens } for n in range(STATES_LEN)]
+    
+    for transition in slr_automata.transitions:
+        for non_terminal in non_terminals_tokens:
+            if transition[0][1] == non_terminal:
+                goto_table[transition[0][0]][non_terminal] = transition[1]
+                continue
+    
+    
+    print('\nTable: ')
+    for gt in goto_table:
+        print(gt)
+
+
+
+
+
+
+
 
 
 
