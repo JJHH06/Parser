@@ -1,0 +1,13 @@
+,ACTION,ACTION,ACTION,ACTION,ACTION,ACTION,GOTO,GOTO
+,NUMBER,PLUS,TIMES,LPAREN,RPAREN,$,expression,term
+0,"('shift', 3)",,,"('shift', 4)",,,1.0,2.0
+1,,,,,,"('accept', None)",,
+2,,"('shift', 5)",,,"('reduce', 2)","('reduce', 2)",,
+3,,"('reduce', 4)","('shift', 6)",,"('reduce', 4)","('reduce', 4)",,
+4,"('shift', 3)",,,"('shift', 4)",,,7.0,2.0
+5,"('shift', 3)",,,"('shift', 4)",,,8.0,2.0
+6,"('shift', 3)",,,"('shift', 4)",,,,9.0
+7,,,,,"('shift', 10)",,,
+8,,,,,"('reduce', 1)","('reduce', 1)",,
+9,,"('reduce', 3)",,,"('reduce', 3)","('reduce', 3)",,
+10,,"('reduce', 5)",,,"('reduce', 5)","('reduce', 5)",,

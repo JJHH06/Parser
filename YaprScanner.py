@@ -1,31 +1,8 @@
 
-def clean_comments(raw_input):
-    clean_string = ''
-    can_append = True
-    i = 0
-    while i < len(raw_input):
-        if raw_input[i] == '/':
-            if (i+1 < len(raw_input) and raw_input[i+1] == '*'):
-                can_append = False
-                i += 2  # skip over the comment start
-                continue
-        elif raw_input[i] == '*':
-            if (i+1 < len(raw_input) and raw_input[i+1] == '/'):
-                can_append = True
-                i += 2  # skip over the comment end
-                continue
-        if can_append:
-            clean_string += raw_input[i]
-            i += 1
-        else:
-            i += 1
-    return clean_string
 
 
 
-def read_file(file_path):
-    with open(file_path, 'r') as file:
-        return file.read()
+
     
 
 
@@ -50,7 +27,7 @@ def match_automata_returns(recognized_type, i):
 
 
 
-def file_simulation(extended_automata, test_string):
+def yapr_file_simulation(extended_automata, test_string):
     recognized_tokens = []
     test_string = test_string + ''
     current_sim_status = 0

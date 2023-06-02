@@ -2,13 +2,38 @@ import sys
 from ExtendedAutomata import *
 import copy
 import os
-from Scanner import *
+from YaprScanner import yapr_file_simulation
 from Automata import Automata, draw_automata
 from GrammarAutomata import *
 import pandas as pd
 
 
+def clean_yapr_comments(raw_input):
+    clean_string = ''
+    can_append = True
+    i = 0
+    while i < len(raw_input):
+        if raw_input[i] == '/':
+            if (i+1 < len(raw_input) and raw_input[i+1] == '*'):
+                can_append = False
+                i += 2  # skip over the comment start
+                continue
+        elif raw_input[i] == '*':
+            if (i+1 < len(raw_input) and raw_input[i+1] == '/'):
+                can_append = True
+                i += 2  # skip over the comment end
+                continue
+        if can_append:
+            clean_string += raw_input[i]
+            i += 1
+        else:
+            i += 1
+    return clean_string
 
+
+def read_file(file_path):
+    with open(file_path, 'r') as file:
+        return file.read()
 
 def build_goto_table(tokens:list(), automata:Automata, states_len:int) -> list():
     goto_table = [{i:None for i in tokens } for _ in range(states_len)]
@@ -71,9 +96,9 @@ def calculate_reduce_table(action_table:list, equivalent_states:list, production
 def main():
     extended_automata = ExtendedAutomata([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], {' ', 'p', 'c', 'x', 'H', 'a', 'e', 'y', 'r', ';', '\t', 'C', 'u', 'Z', 'E', 'O', 'w', 'j', 'L', '\n', 'n', 'm', 'g', 'R', 'N', 'S', 'A', 'o', 'G', 'M', 'd', 'B', 'f', 'J', 'K', 'k', 'P', 'X', 'i', 'v', 's', 'U', 'b', 'Y', 'F', 'T', '%', ':', 'l', 'h', 'q', 'W', 'I', 'V', 't', 'D', '|', 'z', 'Q'}, [((0, ' '), 1), ((0, 'p'), 2), ((0, 'c'), 2), ((0, 'x'), 2), ((0, 'H'), 3), ((0, 'a'), 2), ((0, 'e'), 2), ((0, 'y'), 2), ((0, 'r'), 2), ((0, ';'), 4), ((0, '\t'), 1), ((0, 'C'), 3), ((0, 'u'), 2), ((0, 'Z'), 3), ((0, 'E'), 3), ((0, 'O'), 3), ((0, 'w'), 2), ((0, 'j'), 2), ((0, 'L'), 3), ((0, '\n'), 1), ((0, 'n'), 2), ((0, 'm'), 2), ((0, 'g'), 2), ((0, 'R'), 3), ((0, 'N'), 3), ((0, 'S'), 3), ((0, 'A'), 3), ((0, 'o'), 2), ((0, 'G'), 3), ((0, 'M'), 3), ((0, 'd'), 2), ((0, 'B'), 3), ((0, 'f'), 2), ((0, 'J'), 3), ((0, 'K'), 3), ((0, 'k'), 2), ((0, 'P'), 3), ((0, 'X'), 3), ((0, 'i'), 2), ((0, 'v'), 2), ((0, 's'), 2), ((0, 'U'), 3), ((0, '|'), 5), ((0, 'b'), 2), ((0, 'Y'), 3), ((0, 'F'), 3), ((0, 'T'), 3), ((0, '%'), 6), ((0, ':'), 7), ((0, 'l'), 2), ((0, 'h'), 2), ((0, 'q'), 2), ((0, 'W'), 3), ((0, 'I'), 3), ((0, 't'), 2), ((0, 'V'), 3), ((0, 'D'), 3), ((0, 'z'), 2), ((0, 'Q'), 3), ((1, ' '), 1), ((1, '\t'), 1), ((1, '\n'), 1), ((2, 'p'), 2), ((2, 'c'), 2), ((2, 'x'), 2), ((2, 'a'), 2), ((2, 'e'), 2), ((2, 'y'), 2), ((2, 'r'), 2), ((2, 'u'), 2), ((2, 'w'), 2), ((2, 'j'), 2), ((2, 'n'), 2), ((2, 'm'), 2), ((2, 'g'), 2), ((2, 'o'), 2), ((2, 'd'), 2), ((2, 'f'), 2), ((2, 'k'), 2), ((2, 'i'), 2), ((2, 'v'), 2), ((2, 's'), 2), ((2, 'b'), 2), ((2, 'l'), 2), ((2, 'h'), 2), ((2, 'q'), 2), ((2, 't'), 2), ((2, 'z'), 2), ((3, 'H'), 3), ((3, 'C'), 3), ((3, 'Z'), 3), ((3, 'E'), 3), ((3, 'O'), 3), ((3, 'L'), 3), ((3, 'R'), 3), ((3, 'N'), 3), ((3, 'S'), 3), ((3, 'A'), 3), ((3, 'G'), 3), ((3, 'M'), 3), ((3, 'B'), 3), ((3, 'J'), 3), ((3, 'K'), 3), ((3, 'P'), 3), ((3, 'X'), 3), ((3, 'U'), 3), ((3, 'Y'), 3), ((3, 'F'), 3), ((3, 'T'), 3), ((3, 'W'), 3), ((3, 'I'), 3), ((3, 'V'), 3), ((3, 'D'), 3), ((3, 'Q'), 3), ((6, 't'), 8), ((8, 'o'), 9), ((9, 'k'), 10), ((10, 'e'), 11), ((11, 'n'), 12)], 0, [1, 2, 3, 4, 5, 7, 12], [0, 1, 2, 6, 4, 5, 3])
     # ruta_archivo = sys.argv[1]
-    ruta_archivo = "slr-1.yalp"
+    ruta_archivo = "slr-3.yalp"
     file_content = read_file(ruta_archivo)
-    file_tokens = file_simulation(extended_automata, clean_comments(file_content))
+    file_tokens = yapr_file_simulation(extended_automata, clean_yapr_comments(file_content))
     productions = []
 
     # NON TERMINAL, [ELEMENT1, ELEMENT2, ...],-1
@@ -243,7 +268,7 @@ def main():
 
     print('\nSimulation:')
     dummy_input = [('TOKEN', 'ID'), ('TOKEN', 'TIMES'), ('TOKEN', 'ID'), ('TOKEN', 'PLUS'),('TOKEN', 'ID')]
-    simulationTable(slr_automata, dummy_input, productions, action_table, goto_table)
+    # simulationTable(slr_automata, dummy_input, productions, action_table, goto_table)
 
 
 def simulationTable(automata:Automata, input_simbols:list(), productions:list(), action_table:list(), goto_table: list()):
