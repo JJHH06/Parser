@@ -9,15 +9,15 @@ factor -> ['LPAREN', 'expression', 'RPAREN'] 0
 factor -> ['ID'] 0
 
 STATE: 1
-term -> ['factor'] 1
+expression_PRIME -> ['expression'] 1
+expression -> ['expression', 'PLUS', 'term'] 1
 
 STATE: 2
 expression -> ['term'] 1
 term -> ['term', 'TIMES', 'factor'] 1
 
 STATE: 3
-expression_PRIME -> ['expression'] 1
-expression -> ['expression', 'PLUS', 'term'] 1
+term -> ['factor'] 1
 
 STATE: 4
 factor -> ['LPAREN', 'expression', 'RPAREN'] 1
@@ -32,14 +32,14 @@ STATE: 5
 factor -> ['ID'] 1
 
 STATE: 6
-term -> ['term', 'TIMES', 'factor'] 2
+expression -> ['expression', 'PLUS', 'term'] 2
+term -> ['term', 'TIMES', 'factor'] 0
+term -> ['factor'] 0
 factor -> ['LPAREN', 'expression', 'RPAREN'] 0
 factor -> ['ID'] 0
 
 STATE: 7
-expression -> ['expression', 'PLUS', 'term'] 2
-term -> ['term', 'TIMES', 'factor'] 0
-term -> ['factor'] 0
+term -> ['term', 'TIMES', 'factor'] 2
 factor -> ['LPAREN', 'expression', 'RPAREN'] 0
 factor -> ['ID'] 0
 
@@ -48,11 +48,11 @@ factor -> ['LPAREN', 'expression', 'RPAREN'] 2
 expression -> ['expression', 'PLUS', 'term'] 1
 
 STATE: 9
-term -> ['term', 'TIMES', 'factor'] 3
-
-STATE: 10
 expression -> ['expression', 'PLUS', 'term'] 3
 term -> ['term', 'TIMES', 'factor'] 1
+
+STATE: 10
+term -> ['term', 'TIMES', 'factor'] 3
 
 STATE: 11
 factor -> ['LPAREN', 'expression', 'RPAREN'] 3
