@@ -46,6 +46,24 @@ def calculate_first(grammar_symbol, productions, first_table):
         return set('ε')
     else:
         return set()
+    
+def get_production_index(production, productions):
+    for i in range(len(productions)):
+        if productions[i][0] == production[0] and productions[i][1] == production[1]:
+            return i
+    return None
+
+
+def calculate_reduce_table(action_table:list, equivalent_states:list, productions:list, follow_table:set):
+    for x in range(len(equivalent_states)):
+        for item in equivalent_states[x]:
+            if item[2] == len(item[1]): #significa que el puntito esta apuntando afuera de la produccion
+                to_state = get_production_index(item, productions)
+                for terminal in follow_table[item[0][1]]:
+                    if action_table[x][terminal] != ('accept', None):
+                        action_table[x][terminal] = ('reduce', to_state)
+    return action_table
+
 
 
 def main():
@@ -205,6 +223,15 @@ def main():
 
     print('\nFollow Table:')
     print(follow_table)
+
+    # calculo de ACTION con reduce
+    print('\nAction Table:')
+    calculate_reduce_table(action_table, equival_states, productions, follow_table)
+
+    for i in range(len(action_table)):
+        print(action_table[i])
+
+    # Ahora necesito construir reduce
 
 
 
