@@ -17,14 +17,20 @@ expression -> ['expression', 'PLUS', 'term'] 1
 expression -> ['expression', 'MINUS', 'term'] 1
 
 STATE: 2
-term -> ['factor'] 1
-
-STATE: 3
 expression -> ['term'] 1
 term -> ['term', 'TIMES', 'factor'] 1
 term -> ['term', 'DIV', 'factor'] 1
 
+STATE: 3
+term -> ['factor'] 1
+
 STATE: 4
+factor -> ['ID'] 1
+
+STATE: 5
+factor -> ['NUMBER'] 1
+
+STATE: 6
 factor -> ['LPAREN', 'expression', 'RPAREN'] 1
 expression -> ['expression', 'PLUS', 'term'] 0
 expression -> ['expression', 'MINUS', 'term'] 0
@@ -35,12 +41,6 @@ term -> ['factor'] 0
 factor -> ['LPAREN', 'expression', 'RPAREN'] 0
 factor -> ['ID'] 0
 factor -> ['NUMBER'] 0
-
-STATE: 5
-factor -> ['NUMBER'] 1
-
-STATE: 6
-factor -> ['ID'] 1
 
 STATE: 7
 expression -> ['expression', 'PLUS', 'term'] 2

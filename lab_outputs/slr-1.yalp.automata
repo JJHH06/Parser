@@ -4,20 +4,20 @@ digraph finite_state_machine {
 	start_mark [shape=point style=invis]
 	0
 	start_mark -> 0
-	0 -> 1 [label="'expression'"]
 	0 -> 3 [label="'factor'"]
 	0 -> 4 [label="'ID'"]
 	0 -> 2 [label="'term'"]
+	0 -> 1 [label="'expression'"]
 	0 -> 5 [label="'LPAREN'"]
 	2
 	2 -> 7 [label="'TIMES'"]
 	3
 	4
 	5
-	5 -> 8 [label="'expression'"]
 	5 -> 3 [label="'factor'"]
 	5 -> 4 [label="'ID'"]
 	5 -> 2 [label="'term'"]
+	5 -> 8 [label="'expression'"]
 	5 -> 5 [label="'LPAREN'"]
 	6
 	6 -> 3 [label="'factor'"]
