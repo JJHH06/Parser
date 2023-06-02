@@ -5,27 +5,27 @@ digraph finite_state_machine {
 	0
 	start_mark -> 0
 	0 -> 4 [label="'LPAREN'"]
+	0 -> 3 [label="'NUMBER'"]
 	0 -> 1 [label="'expression'"]
 	0 -> 2 [label="'term'"]
-	0 -> 3 [label="'NUMBER'"]
 	2
 	2 -> 5 [label="'PLUS'"]
 	3
 	3 -> 6 [label="'TIMES'"]
 	4
 	4 -> 4 [label="'LPAREN'"]
+	4 -> 3 [label="'NUMBER'"]
 	4 -> 7 [label="'expression'"]
 	4 -> 2 [label="'term'"]
-	4 -> 3 [label="'NUMBER'"]
 	5
 	5 -> 4 [label="'LPAREN'"]
+	5 -> 3 [label="'NUMBER'"]
 	5 -> 8 [label="'expression'"]
 	5 -> 2 [label="'term'"]
-	5 -> 3 [label="'NUMBER'"]
 	6
 	6 -> 4 [label="'LPAREN'"]
-	6 -> 9 [label="'term'"]
 	6 -> 3 [label="'NUMBER'"]
+	6 -> 9 [label="'term'"]
 	7
 	7 -> 10 [label="'RPAREN'"]
 	8

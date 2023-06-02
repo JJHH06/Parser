@@ -5,6 +5,8 @@ import os
 from Scanner import *
 from Automata import Automata, draw_automata
 from GrammarAutomata import *
+import pandas as pd
+
 
 
 
@@ -135,11 +137,11 @@ def main():
     for production in productions:
         print(production[0][1], '->', [n[1] for n in production[1]])
 
-    print("\nTERMINALS:")
-    print(terminals)
+    # print("\nTERMINALS:")
+    # print(terminals)
 
-    print("\nNON TERMINALS:")
-    print(non_terminals)
+    # print("\nNON TERMINALS:")
+    # print(non_terminals)
 
     alphabet = non_terminals + terminals
     alphabet = copy.deepcopy(alphabet)
@@ -210,8 +212,8 @@ def main():
     for non_terminal_key in non_terminals_tokens:
         calculate_first(('NON_TERMINAL', non_terminal_key), productions, first_table)
     
-    print('\nTable:')
-    print(first_table)
+    # print('\nTable:')
+    # print(first_table)
 
     # calculo de FOLLOW
     follow_table = { initial_non_terminal: set(['$'])}
@@ -221,20 +223,75 @@ def main():
     for non_terminal_key in non_terminals_tokens:
         calculate_follow(('NON_TERMINAL', non_terminal_key), productions, follow_table, first_table)
 
-    print('\nFollow Table:')
-    print(follow_table)
+    # print('\nFollow Table:')
+    # print(follow_table)
 
     # calculo de ACTION con reduce
-    print('\nAction Table:')
+    # print('\nAction Table:')
     calculate_reduce_table(action_table, equival_states, productions, follow_table)
 
-    for i in range(len(action_table)):
-        print(action_table[i])
+    # for i in range(len(action_table)):
+    #     print(action_table[i])
 
-    # Ahora necesito construir reduce
+    
+    #para la impresion de la tabla
+    joined_parsing_table = pd.concat([pd.DataFrame(action_table), pd.DataFrame(goto_table)], axis=1,keys=['ACTION', 'GOTO'])
+    joined_parsing_table.to_csv("./lab_outputs/"+file_name+".parsing_table.csv")
+
+    print('\nParsing Table:')
+    print(joined_parsing_table)
+
+    print('\nSimulation:')
+    dummy_input = [('TOKEN', 'ID'), ('TOKEN', 'TIMES'), ('TOKEN', 'ID'), ('TOKEN', 'PLUS'),('TOKEN', 'ID')]
+    simulationTable(slr_automata, dummy_input, productions, action_table, goto_table)
 
 
+def simulationTable(automata:Automata, input_simbols:list(), productions:list(), action_table:list(), goto_table: list()):
+    stack = [automata.initial_state]
+    symbols = []
+    input = input_simbols+ [('TOKEN', '$')]
+    action = None
 
+    stack_list = [ copy.deepcopy(stack)]
+    symbols_list = [ copy.deepcopy(symbols)]
+    input_list = [ copy.deepcopy(input)]
+    action_list = [ copy.deepcopy(action)]
+
+    i = 0
+    while True:
+        s = stack[-1] # numero de estado al tope del stack
+        a = input[0] # primer simbolo de la entrada
+
+        if action_table[s][a[1]] is None:
+            print('ERROR')
+            break
+        elif action_table[s][a[1]][0] == 'shift':
+            action = action_table[s][a[1]]
+            stack.append(action_table[s][a[1]][1])
+            symbols.append(input.pop(0))
+            #agregar a historial
+            stack_list.append(copy.deepcopy(stack))
+            symbols_list.append(copy.deepcopy(symbols))
+            input_list.append(copy.deepcopy(input))
+            action_list.append(copy.deepcopy(action))
+        elif action_table[s][a[1]][0] == 'reduce':
+            r = len(productions[action_table[s][a[1]][1]][1]) #productions[[s][a[1]][1]][0] es el que debo agregar
+            for _ in range(r):
+                stack.pop()
+                symbols.pop()
+            stack.append(goto_table[stack[-1]][productions[action_table[s][a[1]][1]][0][1]]) #creo xd verificar
+            symbols.append(productions[action_table[s][a[1]][1]][0][0])
+            #agregar a historial
+            stack_list.append(copy.deepcopy(stack))
+            symbols_list.append(copy.deepcopy(symbols))
+            input_list.append(copy.deepcopy(input))
+            action_list.append(copy.deepcopy(action))
+        elif action_table[s][a[1]][0] == 'accept':
+            print('ACCEPT')
+            break
+        else:
+            print('ERROR')
+            break
 
 
 
