@@ -8,6 +8,26 @@ from GrammarAutomata import *
 
 
 
+def build_goto_table(tokens:list(), automata:Automata, states_len:int) -> list():
+    goto_table = [{i:None for i in tokens } for _ in range(states_len)]
+    
+    for transition in automata.transitions:
+        for non_terminal in tokens:
+            if transition[0][1] == non_terminal:
+                goto_table[transition[0][0]][non_terminal] = transition[1]
+                continue
+    return goto_table
+
+def build_action_table_shift(tokens:list(), automata:Automata, states_len:int) -> list():
+    extended_tokens = copy.deepcopy(tokens)+['$']
+    action_table = [{i:None for i in extended_tokens } for _ in range(states_len)]
+    action_table[automata.final_states[0]]['$'] = ('accept', None)
+    for transition in automata.transitions:
+        for terminal in tokens:
+            if transition[0][1] == terminal:
+                action_table[transition[0][0]][terminal] = ('shift', transition[1])
+                continue
+    return action_table
 
 
 def main():
@@ -134,21 +154,16 @@ def main():
     # equival_states
 
     STATES_LEN = len(equival_states)
-    non_terminals_tokens = [n[1] for n in non_terminals]#list(non_terminals) #esto es porque hoy si necesito que tengan el mismo orden xd
-
+    non_terminals_tokens = [n[1] for n in non_terminals] 
+    terminals_tokens = [t[1] for t in terminals]
     
-    goto_table = [{i:None for i in non_terminals_tokens } for n in range(STATES_LEN)]
-    
-    for transition in slr_automata.transitions:
-        for non_terminal in non_terminals_tokens:
-            if transition[0][1] == non_terminal:
-                goto_table[transition[0][0]][non_terminal] = transition[1]
-                continue
-    
-    
+    goto_table = build_goto_table(non_terminals_tokens,slr_automata, len(equival_states))
+    action_table = build_action_table_shift(terminals_tokens, slr_automata, len(equival_states))
     print('\nTable: ')
-    for gt in goto_table:
-        print(gt)
+    for ac in action_table:
+        print(ac)
+
+
 
 
 
