@@ -179,29 +179,53 @@ def main():
     action_table = build_action_table_shift(terminals_tokens, slr_automata, len(equival_states))
 
 
+    initial_non_terminal = productions[0][0][1]
 
     # calculo de FIRST
-    initial_non_terminal = productions[0][0][1]
     first_table = { initial_non_terminal: None}
     for n in non_terminals_tokens:
         first_table[n] = None
     
-    
-
+    # el simbolo inicial no tiene first
     first_table[initial_non_terminal] = set()
-
-    
 
     for non_terminal_key in non_terminals_tokens:
         calculate_first(('NON_TERMINAL', non_terminal_key), productions, first_table)
+    
     print('\nTable:')
     print(first_table)
 
+    # calculo de FOLLOW
+    follow_table = { initial_non_terminal: set(['$'])}
+    for n in non_terminals_tokens:
+        follow_table[n] = None
+
+    for non_terminal_key in non_terminals_tokens:
+        calculate_follow(('NON_TERMINAL', non_terminal_key), productions, follow_table, first_table)
+
+    print('\nFollow Table:')
+    print(follow_table)
 
 
 
 
 
+
+
+def calculate_follow(non_terminal:tuple, productions:list, follow_table:dict, first_table:dict):
+    if follow_table[non_terminal[1]] is not None:
+        return follow_table[non_terminal[1]]
+    else:
+        follow_table[non_terminal[1]] = set()
+        for production in productions:
+            if non_terminal in production[1]:
+                index = production[1].index(non_terminal)
+                if index == len(production[1])-1:
+                    if production[0] != non_terminal:
+                        follow_table[non_terminal[1]] = follow_table[non_terminal[1]].union(calculate_follow(production[0], productions, follow_table, first_table))
+                else:
+                    follow_table[non_terminal[1]] = follow_table[non_terminal[1]].union(calculate_first(production[1][index+1], productions, first_table))
+        return follow_table[non_terminal[1]]
 
 
 
