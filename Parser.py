@@ -250,9 +250,6 @@ def main():
     #Initial non terminal
     prime_init_exp = (productions[0][0][0], productions[0][0][1]+"_PRIME")
 
-    #Pending to solve
-    #non_terminals.add(prime_init_exp)
-
     #added new production at start
     productions = [[prime_init_exp, [copy.deepcopy(productions[0][0])], -1]] + copy.deepcopy(productions)
 
