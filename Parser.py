@@ -8,6 +8,7 @@ from GrammarAutomata import *
 import pandas as pd
 
 
+
 def clean_yapr_comments(raw_input):
     clean_string = ''
     can_append = True
@@ -34,6 +35,74 @@ def clean_yapr_comments(raw_input):
 def read_file(file_path):
     with open(file_path, 'r') as file:
         return file.read()
+
+
+def simulationTable(automata:Automata, input_simbols:list(), productions:list(), action_table:list(), goto_table: list()):
+    stack = [automata.initial_state]
+    symbols = []
+    input = input_simbols+ [('TOKEN', '$')]
+    action = None
+
+    stack_list = [ copy.deepcopy(stack)]
+    symbols_list = [ copy.deepcopy(symbols)]
+    input_list = [ copy.deepcopy(input)]
+    action_list = [ copy.deepcopy(action)]
+
+    i = 0
+    while True:
+        s = stack[-1] # numero de estado al tope del stack
+        a = input[0] # primer simbolo de la entrada
+
+        if action_table[s][a[1]] is None:
+            print('ERROR')
+            break
+        elif action_table[s][a[1]][0] == 'shift':
+            action = action_table[s][a[1]]
+            stack.append(action_table[s][a[1]][1])
+            symbols.append(input.pop(0))
+            #agregar a historial
+            stack_list.append(copy.deepcopy(stack))
+            symbols_list.append(copy.deepcopy(symbols))
+            input_list.append(copy.deepcopy(input))
+            action_list.append(copy.deepcopy(action))
+        elif action_table[s][a[1]][0] == 'reduce':
+            r = len(productions[action_table[s][a[1]][1]][1]) #productions[[s][a[1]][1]][0] es el que debo agregar
+            for _ in range(r):
+                stack.pop()
+                symbols.pop()
+            stack.append(goto_table[stack[-1]][productions[action_table[s][a[1]][1]][0][1]]) #creo xd verificar
+            symbols.append(productions[action_table[s][a[1]][1]][0][0])
+            #agregar a historial
+            stack_list.append(copy.deepcopy(stack))
+            symbols_list.append(copy.deepcopy(symbols))
+            input_list.append(copy.deepcopy(input))
+            action_list.append(copy.deepcopy(action))
+        elif action_table[s][a[1]][0] == 'accept':
+            print('ACCEPT')
+            break
+        else:
+            print('ERROR')
+            break
+
+
+
+
+def calculate_follow(non_terminal:tuple, productions:list, follow_table:dict, first_table:dict):
+    if follow_table[non_terminal[1]] is not None:
+        return follow_table[non_terminal[1]]
+    else:
+        follow_table[non_terminal[1]] = set()
+        for production in productions:
+            if non_terminal in production[1]:
+                index = production[1].index(non_terminal)
+                if index == len(production[1])-1:
+                    if production[0] != non_terminal:
+                        follow_table[non_terminal[1]] = follow_table[non_terminal[1]].union(calculate_follow(production[0], productions, follow_table, first_table))
+                else:
+                    follow_table[non_terminal[1]] = follow_table[non_terminal[1]].union(calculate_first(production[1][index+1], productions, first_table))
+        return follow_table[non_terminal[1]]
+
+
 
 def build_goto_table(tokens:list(), automata:Automata, states_len:int) -> list():
     goto_table = [{i:None for i in tokens } for _ in range(states_len)]
@@ -270,71 +339,13 @@ def main():
     dummy_input = [('TOKEN', 'ID'), ('TOKEN', 'TIMES'), ('TOKEN', 'ID'), ('TOKEN', 'PLUS'),('TOKEN', 'ID')]
     # simulationTable(slr_automata, dummy_input, productions, action_table, goto_table)
 
+    from lexer import Lexer
+    Lexer(read_file('slr-1.yal'))
 
-def simulationTable(automata:Automata, input_simbols:list(), productions:list(), action_table:list(), goto_table: list()):
-    stack = [automata.initial_state]
-    symbols = []
-    input = input_simbols+ [('TOKEN', '$')]
-    action = None
-
-    stack_list = [ copy.deepcopy(stack)]
-    symbols_list = [ copy.deepcopy(symbols)]
-    input_list = [ copy.deepcopy(input)]
-    action_list = [ copy.deepcopy(action)]
-
-    i = 0
-    while True:
-        s = stack[-1] # numero de estado al tope del stack
-        a = input[0] # primer simbolo de la entrada
-
-        if action_table[s][a[1]] is None:
-            print('ERROR')
-            break
-        elif action_table[s][a[1]][0] == 'shift':
-            action = action_table[s][a[1]]
-            stack.append(action_table[s][a[1]][1])
-            symbols.append(input.pop(0))
-            #agregar a historial
-            stack_list.append(copy.deepcopy(stack))
-            symbols_list.append(copy.deepcopy(symbols))
-            input_list.append(copy.deepcopy(input))
-            action_list.append(copy.deepcopy(action))
-        elif action_table[s][a[1]][0] == 'reduce':
-            r = len(productions[action_table[s][a[1]][1]][1]) #productions[[s][a[1]][1]][0] es el que debo agregar
-            for _ in range(r):
-                stack.pop()
-                symbols.pop()
-            stack.append(goto_table[stack[-1]][productions[action_table[s][a[1]][1]][0][1]]) #creo xd verificar
-            symbols.append(productions[action_table[s][a[1]][1]][0][0])
-            #agregar a historial
-            stack_list.append(copy.deepcopy(stack))
-            symbols_list.append(copy.deepcopy(symbols))
-            input_list.append(copy.deepcopy(input))
-            action_list.append(copy.deepcopy(action))
-        elif action_table[s][a[1]][0] == 'accept':
-            print('ACCEPT')
-            break
-        else:
-            print('ERROR')
-            break
+    from Scanner import file_simulation
+    
 
 
-
-
-def calculate_follow(non_terminal:tuple, productions:list, follow_table:dict, first_table:dict):
-    if follow_table[non_terminal[1]] is not None:
-        return follow_table[non_terminal[1]]
-    else:
-        follow_table[non_terminal[1]] = set()
-        for production in productions:
-            if non_terminal in production[1]:
-                index = production[1].index(non_terminal)
-                if index == len(production[1])-1:
-                    if production[0] != non_terminal:
-                        follow_table[non_terminal[1]] = follow_table[non_terminal[1]].union(calculate_follow(production[0], productions, follow_table, first_table))
-                else:
-                    follow_table[non_terminal[1]] = follow_table[non_terminal[1]].union(calculate_first(production[1][index+1], productions, first_table))
-        return follow_table[non_terminal[1]]
 
 
 
