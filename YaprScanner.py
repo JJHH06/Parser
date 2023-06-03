@@ -1,6 +1,7 @@
-
-
-
+# Created by: José Hurtarte
+# Created on: 13/05/2023
+# Last modified on: 02/06/2023
+# Description: Module to simulate the scanner of the yapr language
 
 
     

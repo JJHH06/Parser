@@ -1,3 +1,8 @@
+# Created by: José Hurtarte
+# Created on: 13/05/2023
+# Last modified on: 02/06/2023
+# Description: Parser for yalex and yapr files
+
 import sys
 from ExtendedAutomata import *
 import copy

@@ -1,3 +1,10 @@
+# Created by: José Hurtarte
+# Created on: 31/05/2023
+# Last modified on: 02/06/2023
+# Description: Module to simulate productions as python objects
+
+
+
 import copy
 from Automata import Automata
 
