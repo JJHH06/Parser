@@ -160,7 +160,7 @@ def calculate_reduce_table(action_table:list, equivalent_states:list, production
                 for terminal in follow_table[item[0][1]]:
                     if action_table[x][terminal] is not None:
                         if action_table[x][terminal][0] == 'shift':
-                            print('ERROR: Shift-Reduce conflict:')
+                            print('ERROR: Shift-Reduce conflict in state:', x, 'and terminal:', terminal)
                             print(action_table[x][terminal])
                             print(('reduce', to_state))
                             exit()
