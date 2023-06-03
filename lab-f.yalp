@@ -8,8 +8,9 @@
 %token EQUALS
 %token TIMES
 %token ID
+IGNORE WHITESPACE
 
-
+%%
 
 s:
     l EQUALS r
