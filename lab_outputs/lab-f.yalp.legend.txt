@@ -1,0 +1,42 @@
+
+STATE: 0
+s_PRIME -> ['s'] 0
+s -> ['l', 'EQUALS', 'r'] 0
+s -> ['r'] 0
+l -> ['TIMES', 'r'] 0
+l -> ['ID'] 0
+r -> ['l'] 0
+
+STATE: 1
+s_PRIME -> ['s'] 1
+
+STATE: 2
+s -> ['l', 'EQUALS', 'r'] 1
+r -> ['l'] 1
+
+STATE: 3
+s -> ['r'] 1
+
+STATE: 4
+l -> ['TIMES', 'r'] 1
+r -> ['l'] 0
+l -> ['TIMES', 'r'] 0
+l -> ['ID'] 0
+
+STATE: 5
+l -> ['ID'] 1
+
+STATE: 6
+s -> ['l', 'EQUALS', 'r'] 2
+r -> ['l'] 0
+l -> ['TIMES', 'r'] 0
+l -> ['ID'] 0
+
+STATE: 7
+r -> ['l'] 1
+
+STATE: 8
+l -> ['TIMES', 'r'] 2
+
+STATE: 9
+s -> ['l', 'EQUALS', 'r'] 3

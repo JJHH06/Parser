@@ -278,7 +278,7 @@ def set_difference(set1, set2):
 def create_file(file_content, file_name):
     with open(file_name, 'w', encoding='utf-8') as file:
         file.write(file_content)
-    print(f'File {file_name} created successfully')
+    #print(f'File {file_name} created successfully')
 
 def generate_executable_file_content(extended_automata, code_segments,  header_text, footer_text):
     file_content = str()
@@ -867,7 +867,7 @@ def Lexer(file_raw_content:str):
     create_file(executable_file_content, 'Scanner.py')
 
 
-    print('\n\nBYE!')
+    print('\nFINISHED LEXER USE SUCCESFUL!')
 
 
 

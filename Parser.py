@@ -52,9 +52,11 @@ def simulationTable(automata:Automata, input_simbols:list(), productions:list(),
     while True:
         s = stack[-1] # numero de estado al tope del stack
         a = input[0] # primer simbolo de la entrada
-
-        if action_table[s][a[1]] is None:
-            print('ERROR')
+        if a[1] not in action_table[s].keys():
+            print('REJECTED yapr and yalex files mismatch')
+            break
+        elif action_table[s][a[1]] is None:
+            print('REJECTED')
             break
         elif action_table[s][a[1]][0] == 'shift':
             action = action_table[s][a[1]]
@@ -81,7 +83,7 @@ def simulationTable(automata:Automata, input_simbols:list(), productions:list(),
             print('ACCEPT')
             break
         else:
-            print('ERROR')
+            print('REJECTED')
             break
 
 
@@ -156,17 +158,38 @@ def calculate_reduce_table(action_table:list, equivalent_states:list, production
             if item[2] == len(item[1]): #significa que el puntito esta apuntando afuera de la produccion
                 to_state = get_production_index(item, productions)
                 for terminal in follow_table[item[0][1]]:
-                    if action_table[x][terminal] != ('accept', None):
+                    if action_table[x][terminal] is not None:
+                        if action_table[x][terminal][0] == 'shift':
+                            print('ERROR: Shift-Reduce conflict:')
+                            print(action_table[x][terminal])
+                            print(('reduce', to_state))
+                            exit()
+                        elif action_table[x][terminal] != ('accept', None):
+                            action_table[x][terminal] = ('reduce', to_state)
+                    else:
                         action_table[x][terminal] = ('reduce', to_state)
+            
     return action_table
 
 
 
 def main():
+    yapr_file_path = "lab-f.yalp" #TODO: remove this line
+    yalex_file_path = 'lab-f.yal'# TODO: remove this line
+    input_file_path = 'test.txt' # TODO: remove this line
+    #check if arguments are more than 1 if not exit and print error
+    # if len(sys.argv) < 2:
+    #     print('Error: No input file')
+    #     exit()
+    
+
+
+    
+
     extended_automata = ExtendedAutomata([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], {' ', 'p', 'c', 'x', 'H', 'a', 'e', 'y', 'r', ';', '\t', 'C', 'u', 'Z', 'E', 'O', 'w', 'j', 'L', '\n', 'n', 'm', 'g', 'R', 'N', 'S', 'A', 'o', 'G', 'M', 'd', 'B', 'f', 'J', 'K', 'k', 'P', 'X', 'i', 'v', 's', 'U', 'b', 'Y', 'F', 'T', '%', ':', 'l', 'h', 'q', 'W', 'I', 'V', 't', 'D', '|', 'z', 'Q'}, [((0, ' '), 1), ((0, 'p'), 2), ((0, 'c'), 2), ((0, 'x'), 2), ((0, 'H'), 3), ((0, 'a'), 2), ((0, 'e'), 2), ((0, 'y'), 2), ((0, 'r'), 2), ((0, ';'), 4), ((0, '\t'), 1), ((0, 'C'), 3), ((0, 'u'), 2), ((0, 'Z'), 3), ((0, 'E'), 3), ((0, 'O'), 3), ((0, 'w'), 2), ((0, 'j'), 2), ((0, 'L'), 3), ((0, '\n'), 1), ((0, 'n'), 2), ((0, 'm'), 2), ((0, 'g'), 2), ((0, 'R'), 3), ((0, 'N'), 3), ((0, 'S'), 3), ((0, 'A'), 3), ((0, 'o'), 2), ((0, 'G'), 3), ((0, 'M'), 3), ((0, 'd'), 2), ((0, 'B'), 3), ((0, 'f'), 2), ((0, 'J'), 3), ((0, 'K'), 3), ((0, 'k'), 2), ((0, 'P'), 3), ((0, 'X'), 3), ((0, 'i'), 2), ((0, 'v'), 2), ((0, 's'), 2), ((0, 'U'), 3), ((0, '|'), 5), ((0, 'b'), 2), ((0, 'Y'), 3), ((0, 'F'), 3), ((0, 'T'), 3), ((0, '%'), 6), ((0, ':'), 7), ((0, 'l'), 2), ((0, 'h'), 2), ((0, 'q'), 2), ((0, 'W'), 3), ((0, 'I'), 3), ((0, 't'), 2), ((0, 'V'), 3), ((0, 'D'), 3), ((0, 'z'), 2), ((0, 'Q'), 3), ((1, ' '), 1), ((1, '\t'), 1), ((1, '\n'), 1), ((2, 'p'), 2), ((2, 'c'), 2), ((2, 'x'), 2), ((2, 'a'), 2), ((2, 'e'), 2), ((2, 'y'), 2), ((2, 'r'), 2), ((2, 'u'), 2), ((2, 'w'), 2), ((2, 'j'), 2), ((2, 'n'), 2), ((2, 'm'), 2), ((2, 'g'), 2), ((2, 'o'), 2), ((2, 'd'), 2), ((2, 'f'), 2), ((2, 'k'), 2), ((2, 'i'), 2), ((2, 'v'), 2), ((2, 's'), 2), ((2, 'b'), 2), ((2, 'l'), 2), ((2, 'h'), 2), ((2, 'q'), 2), ((2, 't'), 2), ((2, 'z'), 2), ((3, 'H'), 3), ((3, 'C'), 3), ((3, 'Z'), 3), ((3, 'E'), 3), ((3, 'O'), 3), ((3, 'L'), 3), ((3, 'R'), 3), ((3, 'N'), 3), ((3, 'S'), 3), ((3, 'A'), 3), ((3, 'G'), 3), ((3, 'M'), 3), ((3, 'B'), 3), ((3, 'J'), 3), ((3, 'K'), 3), ((3, 'P'), 3), ((3, 'X'), 3), ((3, 'U'), 3), ((3, 'Y'), 3), ((3, 'F'), 3), ((3, 'T'), 3), ((3, 'W'), 3), ((3, 'I'), 3), ((3, 'V'), 3), ((3, 'D'), 3), ((3, 'Q'), 3), ((6, 't'), 8), ((8, 'o'), 9), ((9, 'k'), 10), ((10, 'e'), 11), ((11, 'n'), 12)], 0, [1, 2, 3, 4, 5, 7, 12], [0, 1, 2, 6, 4, 5, 3])
-    # ruta_archivo = sys.argv[1]
-    ruta_archivo = "slr-3.yalp"
-    file_content = read_file(ruta_archivo)
+    #yapr_file_path = sys.argv[1]
+    
+    file_content = read_file(yapr_file_path)
     file_tokens = yapr_file_simulation(extended_automata, clean_yapr_comments(file_content))
     productions = []
 
@@ -263,7 +286,7 @@ def main():
     #     for production in equival_states[state]:
     #         print(production[0][1], '->', [n[1] for n in production[1]], production[2])
 
-    file_name = os.path.basename(ruta_archivo)
+    file_name = os.path.basename(yapr_file_path)
     with open("./lab_outputs/"+file_name+".legend.txt", 'w') as file:
         for state in range(len(equival_states)):
             file.write("\nSTATE: {}\n".format(state))
@@ -335,15 +358,26 @@ def main():
     print('\nParsing Table:')
     print(joined_parsing_table)
 
-    print('\nSimulation:')
-    dummy_input = [('TOKEN', 'ID'), ('TOKEN', 'TIMES'), ('TOKEN', 'ID'), ('TOKEN', 'PLUS'),('TOKEN', 'ID')]
-    # simulationTable(slr_automata, dummy_input, productions, action_table, goto_table)
+    print('\nLexer Scanning:')
 
     from lexer import Lexer
-    Lexer(read_file('slr-1.yal'))
 
-    from Scanner import file_simulation
+    #yalex_file_path = sys.argv[2]
+    Lexer(read_file(yalex_file_path))
+
+    from Scanner import file_simulation, extended_automata
+
+    test_string = read_file(input_file_path)
+    tokenized_yalex_input = file_simulation( extended_automata, test_string)
+    print(tokenized_yalex_input)
+    parser_token_format = [('TOKEN', n[0]) for n in tokenized_yalex_input]
     
+    print('\nParsing shift-reduce simulation:')
+    simulationTable(slr_automata, parser_token_format, productions, action_table, goto_table)
+
+
+
+
 
 
 

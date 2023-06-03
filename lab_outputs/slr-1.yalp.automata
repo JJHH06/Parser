@@ -4,30 +4,30 @@ digraph finite_state_machine {
 	start_mark [shape=point style=invis]
 	0
 	start_mark -> 0
-	0 -> 1 [label="'expression'"]
 	0 -> 4 [label="'ID'"]
-	0 -> 3 [label="'factor'"]
+	0 -> 1 [label="'expression'"]
 	0 -> 5 [label="'LPAREN'"]
+	0 -> 3 [label="'factor'"]
 	0 -> 2 [label="'term'"]
 	2
 	2 -> 7 [label="'TIMES'"]
 	3
 	4
 	5
-	5 -> 8 [label="'expression'"]
 	5 -> 4 [label="'ID'"]
-	5 -> 3 [label="'factor'"]
+	5 -> 8 [label="'expression'"]
 	5 -> 5 [label="'LPAREN'"]
+	5 -> 3 [label="'factor'"]
 	5 -> 2 [label="'term'"]
 	6
 	6 -> 4 [label="'ID'"]
-	6 -> 3 [label="'factor'"]
 	6 -> 5 [label="'LPAREN'"]
+	6 -> 3 [label="'factor'"]
 	6 -> 9 [label="'term'"]
 	7
 	7 -> 4 [label="'ID'"]
-	7 -> 10 [label="'factor'"]
 	7 -> 5 [label="'LPAREN'"]
+	7 -> 10 [label="'factor'"]
 	8
 	8 -> 11 [label="'RPAREN'"]
 	8 -> 6 [label="'PLUS'"]
